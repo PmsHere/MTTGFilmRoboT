@@ -1,10 +1,10 @@
 if [ -z $UPSTREAM_REPO ]
 then
   echo "Cloning main Repository"
-  git clone https://github.com/PmsHere/AutoFilterAdvance /AutoFilterAdvance
+  git clone https://github.com/PmsHere/MTTGFilmRoboT /MTTGFilmRoboT
 else
   echo "Cloning Custom Repo from $UPSTREAM_REPO "
-  git clone $UPSTREAM_REPO /AutoFilterAdvance
+  git clone $UPSTREAM_REPO /MTTGFilmRoboT
 fi
 cd /AutoFilterAdvance
 pip3 install -U -r requirements.txt
