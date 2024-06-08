@@ -97,12 +97,7 @@ async def next_page(bot, query):
     elif off_set is None:
         btn.insert(0,
             [
-                InlineKeyboardButton("Updates", url="https://t.me/VJ_Botz"),
-            ]
-        )
-        btn.insert(1,
-            [
-                InlineKeyboardButton("🍿 YouTube Channel 🍿", url="https://youtube.com/@Tech_VJ"),
+                InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",url=invite_link.invite_link),
             ]
         )
         btn.append(
@@ -412,14 +407,25 @@ async def cb_handler(client: Client, query: CallbackQuery):
     elif query.data == "pages":
         await query.answer()
     elif query.data == "start":
-        buttons = [[
-            InlineKeyboardButton('💝 Subscribe YouTube Channel 💗', url=f'http://youtube.com/@Tech_VJ')
-            ],[
-            InlineKeyboardButton('♻️ Update Channel ♻️', url=f'https://t.me/VJ_Botz')
-            ],[
-            InlineKeyboardButton('ℹ️ 𝙷𝚎𝚕𝚙', callback_data='help'),
-            InlineKeyboardButton('😊 𝙰𝚋𝚘𝚞𝚝', callback_data='about')
-        ]]
+        buttons = [
+            [
+                InlineKeyboardButton(
+                    "📮 ᴄᴏᴍᴘʟᴀɪɴᴛꜱ/ ꜰᴇᴇᴅʙᴀᴄᴋ" ,
+                    url="http://t.me/PmsHereRobot",
+                )
+            ],
+            [
+                InlineKeyboardButton("ᴍᴇɴᴜ ⚙", callback_data="help"),
+                InlineKeyboardButton("🪄 ᴍᴀɢɪᴄ", url=f"http://t.me/{temp.U_NAME}?startgroup=true"),
+            ],
+            [
+                InlineKeyboardButton("ᴏᴡɴᴇʀ 🧠", url="http://t.me/chiyaan_dhruv"),
+                InlineKeyboardButton("📝 ʀᴇᴀᴅ ᴛʜɪꜱ", callback_data="about"),
+            ],
+            [
+                InlineKeyboardButton("❤️‍🔥 ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴍᴀʟʟᴜ ᴛᴏʀᴇɴᴛᴢ", url="http://t.me/Mallutorentztg"),
+            ],
+        ]
         reply_markup = InlineKeyboardMarkup(buttons)
         await query.message.edit_text(
             text=script.START_TXT.format(query.from_user.mention, temp.U_NAME, temp.B_NAME),
@@ -726,7 +732,7 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap = f"Here is what i found for your query <u><i>{search}</u></i>"
+        cap = f"<b>ആദ്യം ഈ ബോട്ടിൽ പോയിട്ട് ജോയിൻ ആവുക. അതിനു ശേഷം ഇവിടെ മൂവി ക്ലിക്ക് ചെയ്യുക.\nബോട്ട് 👉@TGFilmRobot👈.\nHere is what i found for your query👇👇👇👇\n #{search}</b>"
     if imdb and imdb.get('poster'):
         try:
             await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024],
