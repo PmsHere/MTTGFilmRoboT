@@ -8,10 +8,10 @@ set -e
 
 # Clone the repository
 echo "Cloning Repository from $UPSTREAM_REPO"
-git clone $UPSTREAM_REPO /AutoFilterAdvance
+git clone $UPSTREAM_REPO /MTTGFilmRoboT
 
 # Change directory to the cloned repository
-cd /AutoFilterAdvance
+cd /MTTGFilmRoboT
 
 # Install dependencies
 pip3 install -U -r requirements.txt
