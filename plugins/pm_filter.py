@@ -30,7 +30,7 @@ SPELL_CHECK = {}
 INVITE = {}
 
 @Client.on_message(
-    filters.text & filters.private & filters.incoming & filters.user(AUTH_USERS)
+    filters.text & filters.private & filters.incoming & filters.user(ADMINS)
     if ADMINS
     else filters.text & filters.private & filters.incoming
 )
