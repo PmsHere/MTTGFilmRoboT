@@ -34,108 +34,88 @@ INVITE = {}
     if ADMINS
     else filters.text & filters.private & filters.incoming
 )
-async def filter(client, message):
-    settings = await get_settings(message.chat.id)
-    fsub_id = await force_sub_db.get_fsub()
-    jr = await force_sub_db.getJoin()
-    invite_link = INVITE.get(f"{fsub_id}_{jr}")
-
-    if not invite_link:
-        invite_link = await client.create_chat_invite_link(
-            chat_id=int(fsub_id), creates_join_request=jr
-        )
-        INVITE[f"{fsub_id}_{jr}"] = invite_link
-
-    if not await present_in_userbase(message.from_user.id):
-        await add_to_userbase(message.from_user.id)
-
-    if message.text.startswith("/"):
+@Client.on_callback_query(filters.regex(r"^next"))
+async def next_page(bot, query):
+    ident, req, key, offset = query.data.split("_")
+    if int(req) not in [query.from_user.id, 0]:
+        return await query.answer("oKda", show_alert=True)
+    try:
+        offset = int(offset)
+    except:
+        offset = 0
+    search = BUTTONS.get(key)
+    if not search:
+        await query.answer("You are using one of my old messages, please send the request again.", show_alert=True)
         return
 
-    if fsub_id:
-        if not await is_subscribed(client, message):
-            await client.send_message(
-                chat_id=message.from_user.id,
-                text=f"**♦️ READ THIS INSTRUCTION ♦️**\n\n__🗣 നിങ്ങൾ ചോദിക്കുന്ന സിനിമകൾ നിങ്ങൾക്ക് ലഭിക്കണം എന്നുണ്ടെങ്കിൽ നിങ്ങൾ താഴെ കൊടുത്തിട്ടുള്ള ചാനലിൽ ജോയിൻ ചെയ്യണം. ജോയിൻ ചെയ്ത ശേഷം വീണ്ടും ഗ്രൂപ്പിൽ പോയി ആ ബട്ടനിൽ അമർത്തിയാൽ നിങ്ങൾക്ക് ഞാൻ ആ സിനിമ പ്രൈവറ്റ് ആയി അയച്ചു തരുന്നതാണ്..😍\n\n🗣 In Order To Get The Movie Requested By You in Our Groups, You Will Have To Join Our Official Channel First. After That, Try Accessing That Movie Again From Our Group. I'll Send You That Movie Privately 🙈__\n\n**👇 JOIN THIS CHANNEL & TRY 👇\n\n[{invite_link.invite_link}]**",
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(
-                                "💢𝙹𝚘𝚒𝚗 𝙼𝚢 𝙲𝚑𝚊𝚗𝚗𝚎𝚕💢", url=invite_link.invite_link
-                            )
-                        ]
-                    ]
-                ),
-                parse_mode=enums.ParseMode.MARKDOWN,
-                disable_web_page_preview=True,
-            )
-            return
+    files, n_offset, total = await get_search_results(search, offset=offset, filter=True)
+    try:
+        n_offset = int(n_offset)
+    except:
+        n_offset = 0
 
-    if re.findall("((^\/|^,|^!|^\.|^[\U0001F600-\U000E007F]).*)", message.text):
+    if not files:
         return
-
-    if 2 < len(message.text) < 100:
-        search = message.text
-        files, offset, total_results = await get_search_results(
-            search.lower(), offset=0, filter=True
-        )
-
-        pre = "filep" if settings["file_secure"] else "file"
-
+    settings = await get_settings(query.message.chat.id)
+    if settings['button']:
         btn = [
             [
                 InlineKeyboardButton(
-                    text=f"[{get_size(file.file_size)}] {file.file_name}",
-                    callback_data=f"{pre}#{file.file_id}",
+                    text=f"[{get_size(file.file_size)}] {file.file_name}", url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
+                ),
+            ]
+            for file in files
+        ]
+    else:
+        btn = [
+            [
+                InlineKeyboardButton(
+                    text=f"{file.file_name}", url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
                 ),
                 InlineKeyboardButton(
                     text=f"{get_size(file.file_size)}",
-                    callback_data=f"{pre}#{file.file_id}",
+                    url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
                 ),
-            ]
-            if not settings["button"]
-            else [
-                InlineKeyboardButton(
-                    text=f"[{get_size(file.file_size)}] {file.file_name}",
-                    callback_data=f"{pre}#{file.file_id}",
-                )
             ]
             for file in files
         ]
 
-        btn.insert(
-            0,
+    if 0 < offset <= 10:
+        off_set = 0
+    elif offset == 0:
+        off_set = None
+    else:
+        off_set = offset - 10
+    if n_offset == 0:
+        btn.append(
+            [InlineKeyboardButton("⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"),
+             InlineKeyboardButton(f"📃 Pages {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}",
+                                  callback_data="pages")]
+        )
+    elif off_set is None:
+        btn.insert(0,
             [
-                InlineKeyboardButton(
-                    "💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",
-                    url=invite_link.invite_link
-                )
+                InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",url=f"{invite_link}"),
+            ]
+        )
+        btn.append(
+            [InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
+             InlineKeyboardButton("NEXT ⏩", callback_data=f"next_{req}_{key}_{n_offset}")])
+    else:
+        btn.append(
+            [
+                InlineKeyboardButton("⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"),
+                InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
+                InlineKeyboardButton("NEXT ⏩", callback_data=f"next_{req}_{key}_{n_offset}")
             ],
         )
-
-        if offset != "":
-            key = f"{message.chat.id}-{message.id}"
-            BUTTONS[key] = search
-            req = message.from_user.id if message.from_user else 0
-            btn.append(
-                [
-                    InlineKeyboardButton(
-                        text=f"🗓 1/{math.ceil(int(total_results) / 10)}",
-                        callback_data="pages",
-                    ),
-                    InlineKeyboardButton(
-                        text="NEXT ⏩", callback_data=f"next_{req}_{key}_{offset}"
-                    ),
-                ]
-            )
-        else:
-            btn.append([InlineKeyboardButton(text="🗓 1/1", callback_data="pages")])
-
-        await message.reply_text(
-            text=f"<b>ആദ്യം ഈ ബോട്ടിൽ പോയിട്ട് ജോയിൻ ആവുക. അതിനു ശേഷം ഇവിടെ മൂവി ക്ലിക്ക് ചെയ്യുക.\nബോട്ട് 👉@TGFilmRobot👈.\nHere is what i found for your query👇👇👇👇\n #{search}</b>",
-            reply_markup=InlineKeyboardMarkup(btn),
-            parse_mode=enums.ParseMode.HTML,
-)
+    try:
+        await query.edit_message_reply_markup(
+            reply_markup=InlineKeyboardMarkup(btn)
+        )
+    except MessageNotModified:
+        pass
+    await query.answer()
 
 @Client.on_message(filters.group & filters.text & filters.incoming)
 async def give_filter(client, message):
