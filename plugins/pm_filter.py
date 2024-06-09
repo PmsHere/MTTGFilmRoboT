@@ -31,7 +31,7 @@ INVITE = {}
 
 @Client.on_message(
     filters.text & filters.private & filters.incoming & filters.user(AUTH_USERS)
-    if AUTH_USERS
+    if ADMINS
     else filters.text & filters.private & filters.incoming
 )
 async def filter(client, message):
