@@ -674,7 +674,7 @@ async def auto_filter(client, msg, spoll=False):
             for file in files
         ]
 
-    invite_link = f.invite_link
+    invite_link = INVITE_LINK
 
     btn.insert(0, [
     InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", invite_link),
