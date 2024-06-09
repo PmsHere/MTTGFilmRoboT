@@ -673,7 +673,8 @@ async def auto_filter(client, msg, spoll=False):
             ]
             for file in files
         ]
-
+    
+    invite_link = "https://t.me/MalluTorentzTG"
     btn.insert(InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=f"{invite_link}"))
 
     if offset != "":
