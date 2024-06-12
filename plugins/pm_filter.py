@@ -1,3 +1,25 @@
+
+import asyncio
+import time
+
+async def add_filter(group_id, keyword, reply_text, btn, alert, fileid):
+    # Existing code to add the filter
+    # Add timestamp
+    current_time = time.time()
+    await save_filter(group_id, keyword, reply_text, btn, alert, fileid, current_time)
+    
+    # Set a timer to delete the filter after 10 minutes
+    asyncio.create_task(delete_filter_after_timeout(group_id, keyword, 600))
+
+async def delete_filter_after_timeout(group_id, keyword, timeout):
+    await asyncio.sleep(timeout)
+    await delete_filter(group_id, keyword)
+
+async def delete_filter(group_id, keyword):
+    # Implement your filter deletion logic here
+    # Example: await remove_filter_from_database(group_id, keyword)
+    pass
+
 # Kanged From @TroJanZheX
 import asyncio
 import re
