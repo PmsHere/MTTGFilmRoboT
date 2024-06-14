@@ -452,6 +452,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.START_TXT.format(query.from_user.mention, temp.U_NAME, temp.B_NAME),
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
         await query.answer('Piracy Is Crime')
     elif query.data == "help":
@@ -470,6 +471,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.HELP_TXT.format(query.from_user.mention),
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data == "about":
         buttons = [[
@@ -483,6 +485,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.ABOUT_TXT.format(temp.B_NAME),
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data == "source":
         buttons = [[
@@ -493,6 +496,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.SOURCE_TXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data == "manuelfilter":
         buttons = [[
@@ -504,6 +508,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.MANUELFILTER_TXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data == "button":
         buttons = [[
@@ -514,6 +519,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.BUTTON_TXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data == "autofilter":
         buttons = [[
@@ -524,6 +530,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.AUTOFILTER_TXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data == "coct":
         buttons = [[
@@ -534,6 +541,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.CONNECTION_TXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data == "extra":
         buttons = [[
@@ -545,6 +553,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.EXTRAMOD_TXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data == "admin":
         buttons = [[
@@ -555,6 +564,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.ADMIN_TXT,
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data == "stats":
         buttons = [[
@@ -573,6 +583,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.STATUS_TXT.format(total, users, chats, monsize, free),
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data == "rfrsh":
         await query.answer("Fetching MongoDb DataBase")
@@ -592,6 +603,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
             text=script.STATUS_TXT.format(total, users, chats, monsize, free),
             reply_markup=reply_markup,
             parse_mode=enums.ParseMode.HTML
+            disable_web_page_preview=True
         )
     elif query.data.startswith("setgs"):
         ident, set_type, status, grp_id = query.data.split("#")
@@ -752,7 +764,7 @@ async def auto_filter(client, msg, spoll=False):
     if imdb and imdb.get('poster'):
         try:
             await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024],
-                                      reply_markup=InlineKeyboardMarkup(btn))
+                                      reply_markup=InlineKeyboardMarkup(btn), disable_web_page_preview=True)
         except (MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty):
             pic = imdb.get('poster')
             poster = pic.replace('.jpg', "._V1_UX360.jpg")
