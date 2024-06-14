@@ -116,6 +116,7 @@ async def ForceSub(bot: Client, update: Message, file_id: str = False, mode="che
                 quote=True,
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=enums.ParseMode.MARKDOWN,
+                disable_web_page_preview=True,
             )
         return False
 
