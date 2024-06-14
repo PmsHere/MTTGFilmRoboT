@@ -451,7 +451,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.START_TXT.format(query.from_user.mention, temp.U_NAME, temp.B_NAME),
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
         await query.answer('Piracy Is Crime')
@@ -470,7 +470,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.HELP_TXT.format(query.from_user.mention),
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data == "about":
@@ -484,7 +484,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.ABOUT_TXT.format(temp.B_NAME),
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data == "source":
@@ -495,7 +495,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.SOURCE_TXT,
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data == "manuelfilter":
@@ -507,7 +507,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.MANUELFILTER_TXT,
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data == "button":
@@ -518,7 +518,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.BUTTON_TXT,
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data == "autofilter":
@@ -529,7 +529,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.AUTOFILTER_TXT,
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data == "coct":
@@ -540,7 +540,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.CONNECTION_TXT,
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data == "extra":
@@ -552,7 +552,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.EXTRAMOD_TXT,
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data == "admin":
@@ -563,7 +563,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.ADMIN_TXT,
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data == "stats":
@@ -582,7 +582,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.STATUS_TXT.format(total, users, chats, monsize, free),
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data == "rfrsh":
@@ -602,7 +602,7 @@ async def cb_handler(client: Client, query: CallbackQuery):
         await query.message.edit_text(
             text=script.STATUS_TXT.format(total, users, chats, monsize, free),
             reply_markup=reply_markup,
-            parse_mode=enums.ParseMode.HTML
+            parse_mode=enums.ParseMode.HTML,
             disable_web_page_preview=True
         )
     elif query.data.startswith("setgs"):
