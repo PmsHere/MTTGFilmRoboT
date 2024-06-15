@@ -40,14 +40,14 @@ async def give_filter(client, message):
 async def next_page(bot, query):
     ident, req, key, offset = query.data.split("_")
     if int(req) not in [query.from_user.id, 0]:
-        return await query.answer("oKda", show_alert=True)
+        return await query.answer("⚠ ബ്രോ, മറ്റുള്ളവർ റിക്വസ്റ്റ് ചെയിത മൂവിയിൽ കുത്തി നോക്കാതെ ബ്രോന് വേണ്ടത് ബ്രോ റിക്വസ്റ്റ് ചെയ്യുക.🙏\n\n⚠ Bro, Search Your Own File, Don't Click Others Requested Files", show_alert=True)
     try:
         offset = int(offset)
     except:
         offset = 0
     search = BUTTONS.get(key)
     if not search:
-        await query.answer("You are using one of my old messages, please send the request again.", show_alert=True)
+        await query.answer("നിങ്ങൾ എന്റെ പഴയ സന്ദേശങ്ങളിലൊന്നാണ് ഉപയോഗിക്കുന്നത്, ദയവായി വീണ്ടും സെർച്ച് ചെയ്യുക.\n\n🤦‍♂You are using one of my old messages, please send the request again", show_alert=True)
         return
 
     files, n_offset, total = await get_search_results(search, offset=offset, filter=True)
@@ -124,12 +124,12 @@ async def next_page(bot, query):
 async def advantage_spoll_choker(bot, query):
     _, user, movie_ = query.data.split('#')
     if int(user) != 0 and query.from_user.id != int(user):
-        return await query.answer("okDa", show_alert=True)
+        return await query.answer("⚠ ബ്രോ, മറ്റുള്ളവർ റിക്വസ്റ്റ് ചെയിത മൂവിയിൽ കുത്തി നോക്കാതെ ബ്രോന് വേണ്ടത് ബ്രോ റിക്വസ്റ്റ് ചെയ്യുക.🙏\n\n⚠ Bro, Search Your Own File, Don't Click Others Requested Files", show_alert=True)
     if movie_ == "close_spellcheck":
         return await query.message.delete()
     movies = SPELL_CHECK.get(query.message.reply_to_message.id)
     if not movies:
-        return await query.answer("You are clicking on an old button which is expired.", show_alert=True)
+        return await query.answer("നിങ്ങൾ എന്റെ പഴയ സന്ദേശങ്ങളിലൊന്നാണ് ഉപയോഗിക്കുന്നത്, ദയവായി വീണ്ടും സെർച്ച് ചെയ്യുക.\n\n🤦‍♂You are using one of my old messages, please send the request again", show_alert=True)
     movie = movies[(int(movie_))]
     await query.answer('Checking for Movie in database...')
     k = await manual_filters(bot, query.message, text=movie)
@@ -139,7 +139,7 @@ async def advantage_spoll_choker(bot, query):
             k = (movie, files, offset, total_results)
             await auto_filter(bot, query, k)
         else:
-            k = await query.message.edit("<b>📍 Movie Not available Reasons\n\n<i>1) O.T.T Or DVD Not Released\n\n2) Type Name With Year</i> \n\n3) Movie Is Not Available in the database Say In Our Other Group To Get This Movies\n\n<a href='https://t.me/Group_Linkzzzz'>Our Groups</a></b>")
+            k = await query.message.edit("<b>📍 Movie Not available Reasons\n\n<i>1) O.T.T Or DVD Not Released\n\n2) Type Name With Year</i> \n\n3) Movie Is Not Available in the database #Request In Admin Bot\n\n<a href='https://t.me/PmsHereRobot'>Ｄｒ⚕️ ᴀᴅɪᴛʏᴀ</a></b>")
             await asyncio.sleep(10)
             await k.delete()
 
@@ -777,7 +777,7 @@ async def advantage_spell_chok(msg):
     g_s += await search_gagala(msg.text)
     gs_parsed = []
     if not g_s:
-        k = await msg.reply("<b>I couldn't find anything in than name.\n\n<a href='https://t.me/Group_Linkzzzz'>Check in our other groups</a></b>")
+        k = await msg.reply("<b>I couldn't find anything in than name.\n\n<a href='https://t.me/PmsHereRobot'>Ｄｒ⚕️ ᴀᴅɪᴛʏᴀ</a></b>")
         await asyncio.sleep(8)
         await k.delete()
         return
