@@ -1,25 +1,3 @@
-
-import asyncio
-import time
-
-async def add_filter(group_id, keyword, reply_text, btn, alert, fileid):
-    # Existing code to add the filter
-    # Add timestamp
-    current_time = time.time()
-    await save_filter(group_id, keyword, reply_text, btn, alert, fileid, current_time)
-    
-    # Set a timer to delete the filter after 10 minutes
-    asyncio.create_task(delete_filter_after_timeout(group_id, keyword, 600))
-
-async def delete_filter_after_timeout(group_id, keyword, timeout):
-    await asyncio.sleep(timeout)
-    await delete_filter(group_id, keyword)
-
-async def delete_filter(group_id, keyword):
-    # Implement your filter deletion logic here
-    # Example: await remove_filter_from_database(group_id, keyword)
-    pass
-
 # Kanged From @TroJanZheX
 import asyncio
 import re
@@ -27,6 +5,7 @@ import ast
 import math
 from pyrogram.errors.exceptions.bad_request_400 import MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty
 from Script import script
+from fsub import invite_link
 import pyrogram
 from database.connections_mdb import active_connection, all_connections, delete_connection, if_active, make_active, \
     make_inactive
@@ -118,7 +97,7 @@ async def next_page(bot, query):
     elif off_set is None:
         btn.insert(0,
             [
-                InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",url="https://t.me/+IK9vM2ec1ZdlOTNl"),
+                InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",url=invite_link),
             ]
         )
         btn.append(
@@ -709,7 +688,7 @@ async def auto_filter(client, msg, spoll=False):
     
     btn.insert(0,
         [
-            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url="https://t.me/+IK9vM2ec1ZdlOTNl"),
+            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=invite_link),
         ]
     )
 
