@@ -3,6 +3,8 @@ from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait,
 from info import AUTH_CHANNEL, LONG_IMDB_DESCRIPTION, MAX_LIST_ELM, REQ_CHANNEL, ADMINS
 from imdb import IMDb
 import asyncio
+import tzlocal
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pyrogram.types import Message, InlineKeyboardButton
 from pyrogram import enums
 from typing import Union
@@ -24,6 +26,8 @@ BTN_URL_REGEX = re.compile(
 )
 
 imdb = IMDb() 
+
+scheduler = AsyncIOScheduler(timezone=str(tzlocal.get_localzone()))
 
 BANNED = {}
 SMART_OPEN = '“'
