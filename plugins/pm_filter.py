@@ -692,7 +692,7 @@ async def auto_filter(client, msg, spoll=False):
         link = await client.create_chat_invite_link(
             chat_id=int(chat_id), creates_join_request=creates_join_request
         )
-        Cache.link = link
+        link = link
     btn.insert(0,
         [
             InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=link),
