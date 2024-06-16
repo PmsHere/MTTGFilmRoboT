@@ -94,14 +94,6 @@ async def next_page(bot, query):
              InlineKeyboardButton(f"📃 Pages {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}",
                                   callback_data="pages")]
         )
-
-   link = Cache.link
-    if not link:
-        link = await client.create_chat_invite_link(
-            chat_id=int(chat_id), creates_join_request=creates_join_request
-        )
-        Cache.link = link
-
    elif off_set is None:
         btn.insert(0,
             [
