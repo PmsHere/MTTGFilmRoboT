@@ -29,6 +29,10 @@ logger.setLevel(logging.ERROR)
 BUTTONS = {}
 SPELL_CHECK = {}
 
+class Cache:
+    link = None
+
+
 @Client.on_message((filters.group | filters.private) & filters.text & filters.incoming)
 async def give_filter(client, message):
     k = await manual_filters(client, message)
@@ -58,6 +62,14 @@ async def next_page(bot, query):
 
     if not files:
         return
+        
+    link = Cache.link
+    if not link:
+        link = await bot.create_chat_invite_link(
+                chat_id=int(REQ_CHANNEL), creates_join_request=True
+            )
+        Cache.link = link.invite_link
+
     settings = await get_settings(query.message.chat.id)
     if settings['button']:
         btn = [
@@ -97,7 +109,7 @@ async def next_page(bot, query):
     elif off_set is None:
         btn.insert(0,
             [
-                InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",url="https://t.me/+IK9vM2ec1ZdlOTNl"),
+                InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",url=link.invite_link),
             ]
         )
         btn.append(
@@ -688,7 +700,7 @@ async def auto_filter(client, msg, spoll=False):
 
     btn.insert(0,
         [
-            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url="https://t.me/+IK9vM2ec1ZdlOTNl"),
+            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=link.invite_link),
         ]
     )
 
