@@ -95,14 +95,13 @@ async def next_page(bot, query):
                                   callback_data="pages")]
         )
 
-    link = Cache.link
-if not link:
-    link = await client.create_chat_invite_link(
+   link = Cache.link
+   if not link:
+   link = await client.create_chat_invite_link(
                 chat_id=int(REQ_CHANNEL), creates_join_request=True
             )
-
-    Cache.link = link
-    elif off_set is None:
+     Cache.link = link
+   elif off_set is None:
         btn.insert(0,
             [
                 InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",url=link),
