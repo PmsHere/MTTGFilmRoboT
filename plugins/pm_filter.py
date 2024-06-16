@@ -829,7 +829,7 @@ async def auto_filter(client, msg, spoll=False):
         0,
         [
             InlineKeyboardButton(
-                "💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url="https://t.me/+IK9vM2ec1ZdlOTNl"
+                "💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=link
             ),
         ],
     )
