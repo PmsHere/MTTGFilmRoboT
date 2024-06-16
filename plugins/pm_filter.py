@@ -687,7 +687,7 @@ async def auto_filter(client, msg, spoll=False):
         ]
 
     
-    link = Cache.link
+    link = link
     if not link:
         link = await client.create_chat_invite_link(
             chat_id=int(chat_id), creates_join_request=creates_join_request
