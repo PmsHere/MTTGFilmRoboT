@@ -94,10 +94,18 @@ async def next_page(bot, query):
              InlineKeyboardButton(f"📃 Pages {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}",
                                   callback_data="pages")]
         )
+
+    link = Cache.link
+if not link:
+    link = await client.create_chat_invite_link(
+                chat_id=int(REQ_CHANNEL), creates_join_request=True
+            )
+
+    Cache.link = link
     elif off_set is None:
         btn.insert(0,
             [
-                InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",url="https://t.me/+IK9vM2ec1ZdlOTNl"),
+                InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",url=link),
             ]
         )
         btn.append(
@@ -685,10 +693,17 @@ async def auto_filter(client, msg, spoll=False):
             ]
             for file in files
         ]
+
     
+    link = Cache.link
+if not link:
+    link = await client.create_chat_invite_link(
+                chat_id=int(REQ_CHANNEL), creates_join_request=True
+            )
+    Cache.link = link
     btn.insert(0,
         [
-            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url="https://t.me/+IK9vM2ec1ZdlOTNl"),
+            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=link),
         ]
     )
 
