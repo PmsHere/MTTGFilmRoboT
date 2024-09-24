@@ -73,9 +73,7 @@ async def next_page(bot, query):
                 chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not JOIN_REQS_DB else REQ_CHANNEL),
                 creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
             )).invite_link
-            INVITE_LINK = invite_link
-        else:
-            invite_link = INVITE_LINK
+    INVITE_LINK = invite_link
 
     # Create buttons based on user settings
     if settings['button']:
