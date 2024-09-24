@@ -169,7 +169,7 @@ async def next_page(bot, query):
         )
     elif off_set is None:
         btn.insert(0, [
-            InlineKeyboardButton("💢 Join Our Main Channel 💢", url=invite_link),  # Use the invite link here
+            InlineKeyboardButton("💢 Join Our Main Channel 💢", url=url),  # Use the invite link here
         ])
         btn.append(
             [InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
@@ -719,7 +719,7 @@ async def auto_filter(client, msg, spoll=False):
     if not spoll:
         message = msg
         settings = await get_settings(message.chat.id)
-        invite_link = set_global_invite()  # Fetch invite link
+        INVITE_LINK = url  # Fetch invite link
     if invite_link is None:
         invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
         if message.text.startswith("/"): return  # ignore commands
@@ -737,7 +737,7 @@ async def auto_filter(client, msg, spoll=False):
             return
     else:
         settings = await get_settings(msg.message.chat.id)
-        invite_link = set_global_invite()  # Fetch invite link
+        INVITE_LINK = url  # Fetch invite link
     if invite_link is None:
         invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
         message = msg.message.reply_to_message  # msg will be callback query
@@ -769,7 +769,7 @@ async def auto_filter(client, msg, spoll=False):
         
     btn.insert(0,
         [
-            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=invite_link),
+            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=url),
         ]
     )
 
