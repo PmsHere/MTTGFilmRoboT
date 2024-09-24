@@ -40,44 +40,31 @@ async def give_filter(client, message):
 @Client.on_callback_query(filters.regex(r"^next"))
 async def next_page(bot, query):
     ident, req, key, offset = query.data.split("_")
-    
     if int(req) not in [query.from_user.id, 0]:
-        return await query.answer(
-            "⚠ ബ്രോ, മറ്റുള്ളവർ റിക്വസ്റ്റ് ചെയിത മൂവിയിൽ കുത്തി നോക്കാതെ ബ്രോന് വേണ്ടത് ബ്രോ റിക്വസ്റ്റ് ചെയ്യുക.🙏\n\n⚠ Bro, Search Your Own File, Don't Click Others Requested Files", 
-            show_alert=True
-        )
-    
+        return await query.answer("⚠ ബ്രോ, മറ്റുള്ളവർ റിക്വസ്റ്റ് ചെയിത മൂവിയിൽ കുത്തി നോക്കാതെ ബ്രോന് വേണ്ടത് ബ്രോ റിക്വസ്റ്റ് ചെയ്യുക.🙏\n\n⚠ Bro, Search Your Own File, Don't Click Others Requested Files", show_alert=True)
     try:
         offset = int(offset)
-    except ValueError:
+    except:
         offset = 0
-
     search = BUTTONS.get(key)
     if not search:
-        await query.answer(
-            "നിങ്ങൾ എന്റെ പഴയ സന്ദേശങ്ങളിലൊന്നാണ് ഉപയോഗിക്കുന്നത്, ദയവായി വീണ്ടും സെർച്ച് ചെയ്യുക.\n\n🤦‍♂You are using one of my old messages, please send the request again", 
-            show_alert=True
-        )
+        await query.answer("നിങ്ങൾ എന്റെ പഴയ സന്ദേശങ്ങളിലൊന്നാണ് ഉപയോഗിക്കുന്നത്, ദയവായി വീണ്ടും സെർച്ച് ചെയ്യുക.\n\n🤦‍♂You are using one of my old messages, please send the request again", show_alert=True)
         return
 
     files, n_offset, total = await get_search_results(search, offset=offset, filter=True)
-
     try:
         n_offset = int(n_offset)
-    except ValueError:
+    except:
         n_offset = 0
 
     if not files:
         return
-
     settings = await get_settings(query.message.chat.id)
-    
     if settings['button']:
         btn = [
             [
                 InlineKeyboardButton(
-                    text=f"[{get_size(file.file_size)}] {file.file_name}", 
-                    url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
+                    text=f"[{get_size(file.file_size)}] {file.file_name}", url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
                 ),
             ]
             for file in files
@@ -86,8 +73,7 @@ async def next_page(bot, query):
         btn = [
             [
                 InlineKeyboardButton(
-                    text=f"{file.file_name}", 
-                    url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
+                    text=f"{file.file_name}", url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
                 ),
                 InlineKeyboardButton(
                     text=f"{get_size(file.file_size)}",
@@ -97,21 +83,17 @@ async def next_page(bot, query):
             for file in files
         ]
 
-    # Determine offset
     if 0 < offset <= 10:
         off_set = 0
     elif offset == 0:
         off_set = None
     else:
         off_set = offset - 10
-
-    # Building buttons for pagination
     if n_offset == 0:
         btn.append(
-            [
-                InlineKeyboardButton("⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"),
-                InlineKeyboardButton(f"📃 Pages {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages")
-            ]
+            [InlineKeyboardButton("⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"),
+             InlineKeyboardButton(f"📃 Pages {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}",
+                                  callback_data="pages")]
         )
     elif off_set is None:
         btn.insert(0,
@@ -120,21 +102,16 @@ async def next_page(bot, query):
             ]
         )
         btn.append(
-            [
-                InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
-                InlineKeyboardButton("NEXT ⏩", callback_data=f"next_{req}_{key}_{n_offset}")
-            ]
-        )
+            [InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
+             InlineKeyboardButton("NEXT ⏩", callback_data=f"next_{req}_{key}_{n_offset}")])
     else:
         btn.append(
             [
                 InlineKeyboardButton("⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"),
                 InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
                 InlineKeyboardButton("NEXT ⏩", callback_data=f"next_{req}_{key}_{n_offset}")
-            ]
+            ],
         )
-
-    # Sending the reply markup
     try:
         await query.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(btn)
@@ -668,18 +645,12 @@ async def auto_filter(client, msg, spoll=False):
     if not spoll:
         message = msg
         settings = await get_settings(message.chat.id)
-        
-        # Ignore commands and messages that start with certain characters
-        if message.text.startswith("/"):
-            return  
+        if message.text.startswith("/"): return  # ignore commands
         if re.findall("((^\/|^,|^!|^\.|^[\U0001F600-\U000E007F]).*)", message.text):
             return
-        
-        # Process valid messages
         if 2 < len(message.text) < 100:
             search = message.text
             files, offset, total_results = await get_search_results(search.lower(), offset=0, filter=True)
-
             if not files:
                 if settings["spell_check"]:
                     return await advantage_spell_chok(msg)
@@ -691,124 +662,107 @@ async def auto_filter(client, msg, spoll=False):
         settings = await get_settings(msg.message.chat.id)
         message = msg.message.reply_to_message  # msg will be callback query
         search, files, offset, total_results = spoll
-    
     pre = 'filep' if settings['file_secure'] else 'file'
-
-    # Create buttons based on settings and files
-    btn = []
-    try:
-        if settings["button"]:
-            btn = [
-                [
-                    InlineKeyboardButton(
-                        text=f"[{get_size(file.file_size)}] {file.file_name}", 
-                        url=f"https://t.me/{temp.U_NAME}?start={pre}_{file.file_id}",
-                    )
-                ]
-                for file in files if file.file_size is not None and file.file_name is not None
+    if settings["button"]:
+        btn = [
+            [
+                InlineKeyboardButton(
+                    text=f"[{get_size(file.file_size)}] {file.file_name}", url=f"https://t.me/{temp.U_NAME}?start={pre}_{file.file_id}",
+                ),
             ]
-        else:
-            btn = [
-                [
-                    InlineKeyboardButton(
-                        text=f"{file.file_name}",
-                        url=f"https://t.me/{temp.U_NAME}?start={pre}_{file.file_id}",
-                    ),
-                    InlineKeyboardButton(
-                        text=f"{get_size(file.file_size)}",
-                        url=f"https://t.me/{temp.U_NAME}?start={pre}_{file.file_id}",
-                    ),
-                ]
-                for file in files if file.file_size is not None and file.file_name is not None
+            for file in files
+        ]
+    else:
+        btn = [
+            [
+                InlineKeyboardButton(
+                    text=f"{file.file_name}",
+                    url=f"https://t.me/{temp.U_NAME}?start={pre}_{file.file_id}",
+                ),
+                InlineKeyboardButton(
+                    text=f"{get_size(file.file_size)}",
+                    url=f"https://t.me/{temp.U_NAME}?start={pre}_{file.file_id}",
+                ),
             ]
+            for file in files
+        ]
 
-        # Always insert the join button at the start
-        btn.insert(0, [
+    btn.insert(0,
+        [
             InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=INVITE_LINK),
-        ])
+        ]
+    )
 
-        # Pagination logic
-        if offset != "":
-            key = f"{message.chat.id}-{message.id}"
-            BUTTONS[key] = search
-            req = message.from_user.id if message.from_user else 0
-            btn.append([
-                InlineKeyboardButton(text=f"🗓 1/{math.ceil(int(total_results) / 10)}", callback_data="pages"),
-                InlineKeyboardButton(text="NEXT ⏩", callback_data=f"next_{req}_{key}_{offset}")
-            ])
-        else:
-            btn.append([InlineKeyboardButton(text="🗓 1/1", callback_data="pages")])
-
-        # Fetch IMDB details if required
-        imdb = await get_poster(search, file=(files[0]).file_name) if settings["imdb"] else None
-        TEMPLATE = settings['template']
-        
-        if imdb:
-            # Format the caption with the IMDB details
-            cap = TEMPLATE.format(
-                query=search,
-                title=imdb['title'],
-                votes=imdb['votes'],
-                aka=imdb["aka"],
-                seasons=imdb["seasons"],
-                box_office=imdb['box_office'],
-                localized_title=imdb['localized_title'],
-                kind=imdb['kind'],
-                imdb_id=imdb["imdb_id"],
-                cast=imdb["cast"],
-                runtime=imdb["runtime"],
-                countries=imdb["countries"],
-                certificates=imdb["certificates"],
-                languages=imdb["languages"],
-                director=imdb["director"],
-                writer=imdb["writer"],
-                producer=imdb["producer"],
-                composer=imdb["composer"],
-                cinematographer=imdb["cinematographer"],
-                music_team=imdb["music_team"],
-                distributors=imdb["distributors"],
-                release_date=imdb['release_date'],
-                year=imdb['year'],
-                genres=imdb['genres'],
-                poster=imdb['poster'],
-                plot=imdb['plot'],
-                rating=imdb['rating'],
-                url=imdb['url'],
-                **locals()
-            )
-        else:
-            cap = f"<b>ആദ്യം ഈ ബോട്ടിൽ പോയിട്ട് ജോയിൻ ആവുക. അതിനു ശേഷം ഇവിടെ മൂവി ക്ലിക്ക് ചെയ്യുക.\nബോട്ട് 👉@TGFilmRobot👈.\nHere is what I found for your query👇👇👇👇\n #{search}</b>"
-
-        # Send message with photo if available, otherwise send text
-        if imdb and imdb.get('poster'):
-            try:
-                __msg = await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024],
-                                                   reply_markup=InlineKeyboardMarkup(btn))
-            except (MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty):
-                # Attempt with alternative poster
-                pic = imdb.get('poster')
-                poster = pic.replace('.jpg', "._V1_UX360.jpg")
-                __msg = await message.reply_photo(photo=poster, caption=cap[:1024], reply_markup=InlineKeyboardMarkup(btn))
-            except Exception as e:
-                logger.exception(e)
-                __msg = await message.reply_text(cap, reply_markup=InlineKeyboardMarkup(btn))
-        else:
+    if offset != "":
+        key = f"{message.chat.id}-{message.id}"
+        BUTTONS[key] = search
+        req = message.from_user.id if message.from_user else 0
+        btn.append(
+            [InlineKeyboardButton(text=f"🗓 1/{math.ceil(int(total_results) / 10)}", callback_data="pages"),
+             InlineKeyboardButton(text="NEXT ⏩", callback_data=f"next_{req}_{key}_{offset}")]
+        )
+    else:
+        btn.append(
+            [InlineKeyboardButton(text="🗓 1/1", callback_data="pages")]
+        )
+    imdb = await get_poster(search, file=(files[0]).file_name) if settings["imdb"] else None
+    TEMPLATE = settings['template']
+    if imdb:
+        cap = TEMPLATE.format(
+            query=search,
+            title=imdb['title'],
+            votes=imdb['votes'],
+            aka=imdb["aka"],
+            seasons=imdb["seasons"],
+            box_office=imdb['box_office'],
+            localized_title=imdb['localized_title'],
+            kind=imdb['kind'],
+            imdb_id=imdb["imdb_id"],
+            cast=imdb["cast"],
+            runtime=imdb["runtime"],
+            countries=imdb["countries"],
+            certificates=imdb["certificates"],
+            languages=imdb["languages"],
+            director=imdb["director"],
+            writer=imdb["writer"],
+            producer=imdb["producer"],
+            composer=imdb["composer"],
+            cinematographer=imdb["cinematographer"],
+            music_team=imdb["music_team"],
+            distributors=imdb["distributors"],
+            release_date=imdb['release_date'],
+            year=imdb['year'],
+            genres=imdb['genres'],
+            poster=imdb['poster'],
+            plot=imdb['plot'],
+            rating=imdb['rating'],
+            url=imdb['url'],
+            **locals()
+        )
+    else:
+        cap = f"<b>ആദ്യം ഈ ബോട്ടിൽ പോയിട്ട് ജോയിൻ ആവുക. അതിനു ശേഷം ഇവിടെ മൂവി ക്ലിക്ക് ചെയ്യുക.\nബോട്ട് 👉@TGFilmRobot👈.\nHere is what i found for your query👇👇👇👇\n #{search}</b>"
+    if imdb and imdb.get('poster'):
+        try:
+            __msg = await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024],
+                                      reply_markup=InlineKeyboardMarkup(btn))
+        except (MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty):
+            pic = imdb.get('poster')
+            poster = pic.replace('.jpg', "._V1_UX360.jpg")
+            __msg = await message.reply_photo(photo=poster, caption=cap[:1024], reply_markup=InlineKeyboardMarkup(btn))
+        except Exception as e:
+            logger.exception(e)
             __msg = await message.reply_text(cap, reply_markup=InlineKeyboardMarkup(btn))
-
-        if spoll:
-            await msg.message.delete()
-        
-        # Schedule message deletion
-        if __msg:
-            scheduler.add_job(
-                _delete,
-                "date",
-                [client, __msg],
-                run_date=datetime.now() + timedelta(seconds=600),
-            )
-    except Exception as e:
-        logger.exception("Error in auto_filter: ", e)
-        await message.reply_text("An error occurred while processing your request.", reply_markup=None)
+    else:
+        __msg = await message.reply_text(cap, reply_markup=InlineKeyboardMarkup(btn))
+    if spoll:
+        await msg.message.delete()
+    if __msg:
+        scheduler.add_job(
+            _delete,
+            "date",
+            [client, __msg],
+            run_date=datetime.now() + timedelta(seconds=600),
+        )
 
 
 async def _delete(bot, msg):
