@@ -824,7 +824,7 @@ async def auto_filter(client, msg, spoll=False):
         )
     else:
         cap = f"<b>ആദ്യം ഈ ബോട്ടിൽ പോയിട്ട് ജോയിൻ ആവുക. അതിനു ശേഷം ഇവിടെ മൂവി ക്ലിക്ക് ചെയ്യുക.\nബോട്ട് 👉@MT_FilmBot👈.\nHere is what i found for your query👇👇👇👇\n #{search}</b>"
-    if imdb an'poster'):
+    if imdb and imdb.get('poster'):
         try:
             __msg = await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024],
                                       reply_markup=InlineKeyboardMarkup(btn))
