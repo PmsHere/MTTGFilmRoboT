@@ -675,9 +675,6 @@ async def auto_filter(client, msg, spoll=False):
                 creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
             )).invite_link
         INVITE_LINK = invite_link
-            logger.info("Created Request link")
-        else:
-        invite_link = INVITE_LINK
         message = msg.message.reply_to_message  # msg will be callback query
         search, files, offset, total_results = spoll
     pre = 'filep' if settings['file_secure'] else 'file'
