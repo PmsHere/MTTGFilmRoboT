@@ -10,7 +10,7 @@ import pyrogram
 from database.connections_mdb import active_connection, all_connections, delete_connection, if_active, make_active, \
     make_inactive
 from info import ADMINS, AUTH_CHANNEL, CUSTOM_FILE_CAPTION, REQ_CHANNEL
-from plugins.fsub import INVITE_LINK
+from plugins.fsub import get_invite_link
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram import Client, filters, enums
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid
@@ -69,10 +69,7 @@ async def next_page(bot, query):
         return  # No files to display
 
     settings = await get_settings(query.message.chat.id)
-    invite_link = (await bot.create_chat_invite_link(
-        chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not JOIN_REQS_DB else REQ_CHANNEL),
-        creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
-    )).invite_link
+    invite_link = get_invite_link
     # Create buttons based on user settings
     if settings['button']:
         btn = [
@@ -669,10 +666,7 @@ async def auto_filter(client, msg, spoll=False):
             return
     else:
         settings = await get_settings(msg.message.chat.id)
-        invite_link = (await bot.create_chat_invite_link(
-        chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not JOIN_REQS_DB else REQ_CHANNEL),
-        creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
-    )).invite_link
+        invite_link = get_invite_link
         message = msg.message.reply_to_message  # msg will be callback query
         search, files, offset, total_results = spoll
     pre = 'filep' if settings['file_secure'] else 'file'
@@ -702,7 +696,7 @@ async def auto_filter(client, msg, spoll=False):
   if invite_link:
     btn.insert(0,
         [
-            InlineKeyboardButton(f"💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=invite_link),
+            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=invite_link),
         ]
     )
 
