@@ -74,7 +74,7 @@ async def next_page(bot, query):
                 creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
             )).invite_link
     INVITE_LINK = invite_link
-   else:
+    else:
     invite_link = INVITE_LINK
 
     # Create buttons based on user settings
