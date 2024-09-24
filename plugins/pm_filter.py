@@ -105,6 +105,75 @@ async def next_page(bot, query):
         btn.insert(0, [
             InlineKeyboardButton("💢 Join Our Main Channel 💢", url=invite_link),  # Ensure INVITE_LINK is correctly imported
         ])
+async def next_page(bot, query):
+    ident, req, key, offset = query.data.split("_")
+    
+    # Ensure the user is querying their own request
+    if int(req) not in [query.from_user.id, 0]:
+        return await query.answer("⚠ Please make your own request, don't click on others' requested files.", show_alert=True)
+    
+    # Try to convert the offset to an integer
+    try:
+        offset = int(offset)
+    except ValueError:
+        offset = 0  # Default to 0 if conversion fails
+
+    # Retrieve the search data using the key
+    search = BUTTONS.get(key)
+    if not search:
+        await query.answer("Please send the request again.", show_alert=True)
+        return
+
+    # Get files, new offset, and total count
+    files, n_offset, total = await get_search_results(search, offset=offset, filter=True)
+
+    try:
+        n_offset = int(n_offset)
+    except ValueError:
+        n_offset = 0
+
+    if not files:
+        return  # No files to display
+
+    settings = await get_settings(query.message.chat.id)
+    
+    # Ensure the invite_link is fetched before use
+    invite_link = get_invite_link()  # Fetch invite link
+    if invite_link is None:
+        invite_link = "https://t.me/default_invite_link"  # Fallback if no link is available
+
+    # Create buttons based on user settings
+    if settings['button']:
+        btn = [
+            [InlineKeyboardButton(
+                text=f"[{get_size(file.file_size)}] {file.file_name}", 
+                url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
+            )] for file in files
+        ]
+    else:
+        btn = [
+            [
+                InlineKeyboardButton(text=file.file_name, url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"),
+                InlineKeyboardButton(text=get_size(file.file_size), url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}")
+            ] for file in files
+        ]
+
+    # Pagination Logic
+    if offset > 10:
+        off_set = offset - 10
+    else:
+        off_set = None
+
+    # Adding buttons for pagination and invite link
+    if n_offset == 0:
+        btn.append(
+            [InlineKeyboardButton("⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"),
+             InlineKeyboardButton(f"📃 Pages {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages")]
+        )
+    elif off_set is None:
+        btn.insert(0, [
+            InlineKeyboardButton("💢 Join Our Main Channel 💢", url=invite_link),  # Use the invite link here
+        ])
         btn.append(
             [InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
              InlineKeyboardButton("NEXT ⏩", callback_data=f"next_{req}_{key}_{n_offset}")]
