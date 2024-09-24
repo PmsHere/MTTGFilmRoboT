@@ -51,8 +51,8 @@ async def purge_requests(client, message):
             parse_mode=enums.ParseMode.MARKDOWN,
             disable_web_page_preview=True
         )
-
- @Client.on_message(filters.command("setchat") & filters.user(ADMINS))
+        
+ @Client.on_message(filters.command("setchat") & filters.user(ADMINS)))
  async def add_fsub_chats(bot: Client, update: Message):
 
     chat = update.command[1] if len(update.command) > 1 else None
