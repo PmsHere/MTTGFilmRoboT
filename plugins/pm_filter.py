@@ -69,7 +69,7 @@ async def next_page(bot, query):
         return  # No files to display
 
     settings = await get_settings(query.message.chat.id)
-    invite_link = (await bot.create_chat_invite_link(
+    INVITE_LINK = (await bot.create_chat_invite_link(
                 chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not JOIN_REQS_DB else REQ_CHANNEL),
                 creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
             )).invite_link
@@ -670,7 +670,7 @@ async def auto_filter(client, msg, spoll=False):
             return
     else:
         settings = await get_settings(msg.message.chat.id)
-        invite_link = (await bot.create_chat_invite_link(
+        INVITE_LINK = (await bot.create_chat_invite_link(
                 chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not JOIN_REQS_DB else REQ_CHANNEL),
                 creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
             )).invite_link
