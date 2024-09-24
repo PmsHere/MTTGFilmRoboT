@@ -53,7 +53,7 @@ async def purge_requests(client, message):
         )
         
 @Client.on_message(filters.command("setchat") & filters.user(ADMINS))
-async def add_fsub_chats(bot: Client, update: Message):
+async def add_fsub_chats(client, message):
     chat = update.command[1] if len(update.command) > 1 else None
     if not chat:
         await update.reply_text("Invalid chat id.", quote=True)
