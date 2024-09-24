@@ -69,7 +69,7 @@ async def next_page(bot, query):
         return  # No files to display
 
     settings = await get_settings(query.message.chat.id)
-    INVITE_LINK = invite_link  # Fetch invite link
+    INVITE_LINK = invite_link()  # Fetch invite link
     if invite_link is None:
         invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
     
@@ -740,7 +740,7 @@ async def auto_filter(client, msg, spoll=False):
             return
     else:
         settings = await get_settings(msg.message.chat.id)
-        INVITE_LINK = invite_link  # Fetch invite link
+        INVITE_LINK = invite_link()  # Fetch invite link
     if invite_link is None:
         invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
         message = msg.message.reply_to_message  # msg will be callback query
