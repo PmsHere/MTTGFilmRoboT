@@ -143,3 +143,6 @@ async def ForceSub(bot: Client, update: Message, file_id: str = False, mode="che
 def set_global_invite(url: str):
     global INVITE_LINK
     INVITE_LINK = url
+
+def get_invite_link():
+    return INVITE_LINK
