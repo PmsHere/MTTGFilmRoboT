@@ -74,6 +74,8 @@ async def next_page(bot, query):
                 creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
             )).invite_link
     INVITE_LINK = invite_link
+   else:
+    invite_link = INVITE_LINK
 
     # Create buttons based on user settings
     if settings['button']:
@@ -675,6 +677,8 @@ async def auto_filter(client, msg, spoll=False):
                 creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
             )).invite_link
         INVITE_LINK = invite_link
+   else:
+        invite_link = INVITE_LINK
         message = msg.message.reply_to_message  # msg will be callback query
         search, files, offset, total_results = spoll
     pre = 'filep' if settings['file_secure'] else 'file'
