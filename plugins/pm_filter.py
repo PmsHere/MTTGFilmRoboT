@@ -70,6 +70,10 @@ async def next_page(bot, query):
 
     settings = await get_settings(query.message.chat.id)
     invite_link = get_invite_link()
+    if invite_link is None:
+    invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"
+    print(f"Invite Link: {invite_link}")  # Add this for debugging
+
     # Create buttons based on user settings
     if settings['button']:
         btn = [
@@ -666,6 +670,10 @@ async def auto_filter(client, msg, spoll=False):
     else:
         settings = await get_settings(msg.message.chat.id)
         invite_link = get_invite_link()
+    if invite_link is None:
+    invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"
+    print(f"Invite Link: {invite_link}")  # Add this for debugging
+
         message = msg.message.reply_to_message  # msg will be callback query
         search, files, offset, total_results = spoll
     pre = 'filep' if settings['file_secure'] else 'file'
