@@ -103,7 +103,7 @@ async def next_page(bot, query):
         )
     elif off_set is None:
         btn.insert(0, [
-            InlineKeyboardButton("💢 Join Our Main Channel 💢", url=invite_link),  # Ensure INVITE_LINK is correctly imported
+            InlineKeyboardButton(f"💢 Join Our Main Channel 💢", url=invite_link),  # Ensure INVITE_LINK is correctly imported
         ])
         btn.append(
             [InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
