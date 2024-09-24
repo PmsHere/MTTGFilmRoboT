@@ -41,6 +41,7 @@ async def ForceSub(bot: Client, update: Message, file_id: str = False, mode="che
                 chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not JOIN_REQS_DB else REQ_CHANNEL),
                 creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
             )).invite_link
+            set_global_invite(invite_link)
             INVITE_LINK = invite_link
             logger.info("Created Request link")
         else:
