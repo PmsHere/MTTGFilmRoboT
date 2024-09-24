@@ -71,7 +71,7 @@ async def next_page(bot, query):
     settings = await get_settings(query.message.chat.id)
     invite_link = get_invite_link()  # Fetch invite link
     if invite_link is None:
-        invite_link = "https://t.me/default_invite_link"  # Fallback if no link is available
+        invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
     
     # Create buttons based on user settings
     if settings['button']:
@@ -724,7 +724,7 @@ async def auto_filter(client, msg, spoll=False):
         settings = await get_settings(message.chat.id)
         invite_link = get_invite_link()  # Fetch invite link
     if invite_link is None:
-        invite_link = "https://t.me/default_invite_link"  # Fallback if no link is available
+        invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
         if message.text.startswith("/"): return  # ignore commands
         if re.findall("((^\/|^,|^!|^\.|^[\U0001F600-\U000E007F]).*)", message.text):
             return
@@ -742,7 +742,7 @@ async def auto_filter(client, msg, spoll=False):
         settings = await get_settings(msg.message.chat.id)
         invite_link = get_invite_link()  # Fetch invite link
     if invite_link is None:
-        invite_link = "https://t.me/default_invite_link"  # Fallback if no link is available
+        invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
         message = msg.message.reply_to_message  # msg will be callback query
         search, files, offset, total_results = spoll
     pre = 'filep' if settings['file_secure'] else 'file'
@@ -823,8 +823,8 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap = f"<b>ആദ്യം ഈ ബോട്ടിൽ പോയിട്ട് ജോയിൻ ആവുക. അതിനു ശേഷം ഇവിടെ മൂവി ക്ലിക്ക് ചെയ്യുക.\nബോട്ട് 👉@TGFilmRobot👈.\nHere is what i found for your query👇👇👇👇\n #{search}</b>"
-    if imdb and imdb.get('poster'):
+        cap = f"<b>ആദ്യം ഈ ബോട്ടിൽ പോയിട്ട് ജോയിൻ ആവുക. അതിനു ശേഷം ഇവിടെ മൂവി ക്ലിക്ക് ചെയ്യുക.\nബോട്ട് 👉@MT_FilmBot👈.\nHere is what i found for your query👇👇👇👇\n #{search}</b>"
+    if imdb an'poster'):
         try:
             __msg = await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024],
                                       reply_markup=InlineKeyboardMarkup(btn))
