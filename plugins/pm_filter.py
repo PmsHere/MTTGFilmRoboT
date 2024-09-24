@@ -722,6 +722,9 @@ async def auto_filter(client, msg, spoll=False):
     if not spoll:
         message = msg
         settings = await get_settings(message.chat.id)
+        invite_link = get_invite_link()  # Fetch invite link
+        if invite_link is None:
+        invite_link = "https://t.me/default_invite_link"  # Fallback if no link is available
         if message.text.startswith("/"): return  # ignore commands
         if re.findall("((^\/|^,|^!|^\.|^[\U0001F600-\U000E007F]).*)", message.text):
             return
