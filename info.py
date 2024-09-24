@@ -14,7 +14,7 @@ def is_enabled(value, default):
 SESSION = environ.get('SESSION', 'Media_search')
 API_ID = int(environ.get('API_ID', '4534665'))
 API_HASH = environ.get('API_HASH', '366f7a24d64c5d6578df57e3b5b03fa0')
-BOT_TOKEN = environ.get('BOT_TOKEN', "5353888647:AAEeteJIH8ylNswSF0AmEerws9jwCagb0Q0")
+BOT_TOKEN = environ.get('BOT_TOKEN', "5192109951:AAGT6Ugtcz6QTRA94GiFTrMT0SVBKpOBmZg")
 PORT = int(environ.get('PORT', '8080'))
 
 # Bot settings
@@ -31,20 +31,20 @@ auth_grp = environ.get('AUTH_GROUP')
 AUTH_GROUPS = [int(ch) for ch in auth_grp.split()] if auth_grp else None
 
 # MongoDB information
-DATABASE_URI = environ.get('DATABASE_URI', "mongodb+srv://apollo:pmshere@cluster0.0gkxnrn.mongodb.net/?retryWrites=true&w=majority")
+DATABASE_URI = environ.get('DATABASE_URI', "mongodb+srv://pmshere:NbTyTJtSCLibOhei@cluster0.tni68.mongodb.net/")
 DATABASE_NAME = environ.get('DATABASE_NAME', "Cluster0")
 COLLECTION_NAME = environ.get('COLLECTION_NAME', 'Telegram_files')
 
 # FSUB
-auth_channel = environ.get('AUTH_CHANNEL', '')
+auth_channel = environ.get('AUTH_CHANNEL', '-1001736005739')
 AUTH_CHANNEL = int(auth_channel) if auth_channel and id_pattern.search(auth_channel) else None
 # Set to False inside the bracket if you don't want to use Request Channel else set it to Channel ID
-REQ_CHANNEL = environ.get("REQ_CHANNEL", '-1001605552321')
+REQ_CHANNEL = environ.get("REQ_CHANNEL", '')
 REQ_CHANNEL = int(REQ_CHANNEL) if REQ_CHANNEL and id_pattern.search(REQ_CHANNEL) else False
 JOIN_REQS_DB = environ.get("JOIN_REQS_DB", DATABASE_URI)
 
 # Others
-LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1001390229228'))
+LOG_CHANNEL = int(environ.get('LOG_CHANNEL', '-1001511680464'))
 SUPPORT_CHAT = environ.get('SUPPORT_CHAT', 'MalluTorentzTG')
 P_TTI_SHOW_OFF = is_enabled((environ.get('P_TTI_SHOW_OFF', "True")), True)
 IMDB = is_enabled((environ.get('IMDB', "False")), False)
