@@ -718,8 +718,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
 async def auto_filter(client, msg, spoll=False):
     if not spoll:
-        message = msg
-        settings = await get_settings(message.chat.id)
+        message = msg  # msg is already a Message object
+        settings = await get_settings(message.chat.id)  # Corrected here
         invite_link = get_invite_link()  # Fetch invite link
     if invite_link is None:
         invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
