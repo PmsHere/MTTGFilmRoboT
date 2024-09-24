@@ -1,7 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# (c) @AlbertEinsteinTG
-
 import asyncio
 from pyrogram import Client, enums
 from pyrogram.errors import FloodWait, UserNotParticipant
@@ -17,12 +13,14 @@ INVITE_LINK = None
 db = JoinReqs
 
 async def ForceSub(bot: Client, update: Message, file_id: str = False, mode="checksub"):
-
     global INVITE_LINK
     auth = ADMINS.copy() + [1555340229]
+
+    # Bypass force subscription for admins
     if update.from_user.id in auth:
         return True
 
+    # Skip force subscription if both AUTH_CHANNEL and REQ_CHANNEL are not set
     if not AUTH_CHANNEL and not REQ_CHANNEL:
         return True
 
@@ -34,24 +32,27 @@ async def ForceSub(bot: Client, update: Message, file_id: str = False, mode="che
 
     # Create Invite Link if not exists
     try:
-        # Makes the bot a bit faster and also eliminates many issues realted to invite links.
         if INVITE_LINK is None:
-            invite_link = (await bot.create_chat_invite_link(
-                chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not JOIN_REQS_DB else REQ_CHANNEL),
-                creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
-            )).invite_link
-            INVITE_LINK = invite_link
-            logger.info("Created Req link")
+            # Only attempt to create the invite link if a valid channel is provided
+            if AUTH_CHANNEL or REQ_CHANNEL:
+                invite_link = (await bot.create_chat_invite_link(
+                    chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not JOIN_REQS_DB else REQ_CHANNEL),
+                    creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
+                )).invite_link
+                INVITE_LINK = invite_link
+                logger.info("Created Req link")
+            else:
+                logger.warning("AUTH_CHANNEL and REQ_CHANNEL are not set.")
+                return True
         else:
             invite_link = INVITE_LINK
 
     except FloodWait as e:
         await asyncio.sleep(e.x)
-        fix_ = await ForceSub(bot, update, file_id)
-        return fix_
+        return await ForceSub(bot, update, file_id)
 
     except Exception as err:
-        print(f"Unable to do Force Subscribe to {REQ_CHANNEL}\n\nError: {err}\n\n")
+        logger.error(f"Unable to do Force Subscribe to {REQ_CHANNEL}\nError: {err}")
         await update.reply(
             text="Something went Wrong.",
             parse_mode=enums.ParseMode.MARKDOWN,
@@ -59,10 +60,9 @@ async def ForceSub(bot: Client, update: Message, file_id: str = False, mode="che
         )
         return False
 
-    # Mian Logic
+    # Main Logic: Check for join requests if REQ_CHANNEL is enabled
     if REQ_CHANNEL and db().isActive():
         try:
-            # Check if User is Requested to Join Channel
             user = await db().get_user(update.from_user.id)
             if user and user["user_id"] == update.from_user.id:
                 return True
@@ -76,13 +76,15 @@ async def ForceSub(bot: Client, update: Message, file_id: str = False, mode="che
             return False
 
     try:
+        # Check if the user is subscribed to the channel
         if not AUTH_CHANNEL:
             raise UserNotParticipant
-        # Check if User is Already Joined Channel
+
         user = await bot.get_chat_member(
-                   chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not db().isActive() else REQ_CHANNEL), 
-                   user_id=update.from_user.id
-               )
+            chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not db().isActive() else REQ_CHANNEL),
+            user_id=update.from_user.id
+        )
+
         if user.status == "kicked":
             await bot.send_message(
                 chat_id=update.from_user.id,
@@ -92,21 +94,18 @@ async def ForceSub(bot: Client, update: Message, file_id: str = False, mode="che
                 reply_to_message_id=update.message_id
             )
             return False
-
         else:
             return True
+
     except UserNotParticipant:
-        text=text=f"**♦️ READ THIS INSTRUCTION ♦️**\n\n__🗣 നിങ്ങൾ ചോദിക്കുന്ന സിനിമകൾ നിങ്ങൾക്ക് ലഭിക്കണം എന്നുണ്ടെങ്കിൽ നിങ്ങൾ താഴെ കൊടുത്തിട്ടുള്ള ചാനലിൽ ജോയിൻ ചെയ്യണം. ജോയിൻ ചെയ്ത ശേഷം വീണ്ടും ഗ്രൂപ്പിൽ പോയി ആ ബട്ടനിൽ അമർത്തിയാൽ നിങ്ങൾക്ക് ഞാൻ ആ സിനിമ പ്രൈവറ്റ് ആയി അയച്ചു തരുന്നതാണ്..😍\n\n🗣 In Order To Get The Movie Requested By You in Our Groups, You Will Have To Join Our Official Channel First. After That, Try Accessing That Movie Again From Our Group. I'll Send You That Movie Privately 🙈__\n\n**👇 JOIN THIS CHANNEL & TRY 👇\n\n[{invite_link}]**"
+        # Prompt user to join the channel
+        text = f"**♦️ READ THIS INSTRUCTION ♦️**\n\n__🗣 You need to join our official channel to get the requested movie.__\n\n**👇 JOIN THIS CHANNEL & TRY AGAIN 👇\n\n[{invite_link}]**"
 
         buttons = [
-            [
-                InlineKeyboardButton("💢𝙹𝚘𝚒𝚗 𝙼𝚢 𝙲𝚑𝚊𝚗𝚗𝚎𝚕💢", url=invite_link)
-            ],
-            [
-                InlineKeyboardButton(" 🔄 Try Again 🔄 ", callback_data=f"{mode}#{file_id}")
-            ]
+            [InlineKeyboardButton("💢 Join Channel 💢", url=invite_link)],
+            [InlineKeyboardButton(" 🔄 Try Again 🔄 ", callback_data=f"{mode}#{file_id}")]
         ]
-        
+
         if file_id is False:
             buttons.pop()
 
@@ -116,17 +115,16 @@ async def ForceSub(bot: Client, update: Message, file_id: str = False, mode="che
                 quote=True,
                 reply_markup=InlineKeyboardMarkup(buttons),
                 parse_mode=enums.ParseMode.MARKDOWN,
-                disable_web_page_preview=True,
+                disable_web_page_preview=True
             )
         return False
 
     except FloodWait as e:
         await asyncio.sleep(e.x)
-        fix_ = await ForceSub(bot, update, file_id)
-        return fix_
+        return await ForceSub(bot, update, file_id)
 
     except Exception as err:
-        print(f"Something Went Wrong! Unable to do Force Subscribe.\nError: {err}")
+        logger.error(f"Something Went Wrong! Unable to do Force Subscribe.\nError: {err}")
         await update.reply(
             text="Something went Wrong.",
             parse_mode=enums.ParseMode.MARKDOWN,
@@ -138,4 +136,3 @@ async def ForceSub(bot: Client, update: Message, file_id: str = False, mode="che
 def set_global_invite(url: str):
     global INVITE_LINK
     INVITE_LINK = url
-
