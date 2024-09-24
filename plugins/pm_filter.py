@@ -69,7 +69,7 @@ async def next_page(bot, query):
         return  # No files to display
 
     settings = await get_settings(query.message.chat.id)
-    INVITE_LINK = (await bot.create_chat_invite_link(
+    invite_link = (await bot.create_chat_invite_link(
                 chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not JOIN_REQS_DB else REQ_CHANNEL),
                 creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
             )).invite_link
@@ -105,7 +105,7 @@ async def next_page(bot, query):
         )
     elif off_set is None:
         btn.insert(0, [
-            InlineKeyboardButton("💢 Join Our Main Channel 💢", url=invite_link),  # Ensure INVITE_LINK is correctly imported
+            InlineKeyboardButton("💢 Join Our Main Channel 💢", url=INVITE_LINK),  # Ensure INVITE_LINK is correctly imported
         ])
         btn.append(
             [InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
@@ -670,7 +670,7 @@ async def auto_filter(client, msg, spoll=False):
             return
     else:
         settings = await get_settings(msg.message.chat.id)
-        INVITE_LINK = (await bot.create_chat_invite_link(
+        invite_link = (await bot.create_chat_invite_link(
                 chat_id=(int(AUTH_CHANNEL) if not REQ_CHANNEL and not JOIN_REQS_DB else REQ_CHANNEL),
                 creates_join_request=True if REQ_CHANNEL and JOIN_REQS_DB else False
             )).invite_link
@@ -704,7 +704,7 @@ async def auto_filter(client, msg, spoll=False):
 
     btn.insert(0,
         [
-            InlineKeyboardButton(f"💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=invite_link),
+            InlineKeyboardButton(f"💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=INVITE_LINK),
         ]
     )
 
