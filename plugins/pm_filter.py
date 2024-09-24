@@ -69,7 +69,7 @@ async def next_page(bot, query):
         return  # No files to display
 
     settings = await get_settings(query.message.chat.id)
-    invite_link = get_invite_link
+    invite_link = get_invite_link()
     # Create buttons based on user settings
     if settings['button']:
         btn = [
@@ -665,7 +665,7 @@ async def auto_filter(client, msg, spoll=False):
             return
     else:
         settings = await get_settings(msg.message.chat.id)
-        invite_link = get_invite_link
+        invite_link = get_invite_link()
         message = msg.message.reply_to_message  # msg will be callback query
         search, files, offset, total_results = spoll
     pre = 'filep' if settings['file_secure'] else 'file'
