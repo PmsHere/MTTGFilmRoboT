@@ -719,7 +719,7 @@ async def auto_filter(client, msg, spoll=False):
     if not spoll:
         message = msg
         settings = await get_settings(message.chat.id)
-        INVITE_LINK = url  # Fetch invite link
+        url = set_global_invite()  # Fetch invite link
     if invite_link is None:
         invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
         if message.text.startswith("/"): return  # ignore commands
@@ -737,7 +737,7 @@ async def auto_filter(client, msg, spoll=False):
             return
     else:
         settings = await get_settings(msg.message.chat.id)
-        INVITE_LINK = url  # Fetch invite link
+        url = set_global_invite()  # Fetch invite link
     if invite_link is None:
         invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
         message = msg.message.reply_to_message  # msg will be callback query
