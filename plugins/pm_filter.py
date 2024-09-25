@@ -10,7 +10,6 @@ import pyrogram
 from database.connections_mdb import active_connection, all_connections, delete_connection, if_active, make_active, \
     make_inactive
 from info import ADMINS, AUTH_CHANNEL, CUSTOM_FILE_CAPTION, REQ_CHANNEL
-from plugins.fsub import get_invite_link
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from pyrogram import Client, filters, enums
 from pyrogram.errors import FloodWait, UserIsBlocked, MessageNotModified, PeerIdInvalid
@@ -40,159 +39,84 @@ async def give_filter(client, message):
 @Client.on_callback_query(filters.regex(r"^next"))
 async def next_page(bot, query):
     ident, req, key, offset = query.data.split("_")
-    
-    # Ensure the user is querying their own request
     if int(req) not in [query.from_user.id, 0]:
-        return await query.answer("⚠ Please make your own request, don't click on others' requested files.", show_alert=True)
-    
-    # Try to convert the offset to an integer
+        return await query.answer("⚠ ബ്രോ, മറ്റുള്ളവർ റിക്വസ്റ്റ് ചെയിത മൂവിയിൽ കുത്തി നോക്കാതെ ബ്രോന് വേണ്ടത് ബ്രോ റിക്വസ്റ്റ് ചെയ്യുക.🙏\n\n⚠ Bro, Search Your Own File, Don't Click Others Requested Files", show_alert=True)
     try:
         offset = int(offset)
-    except ValueError:
-        offset = 0  # Default to 0 if conversion fails
-
-    # Retrieve the search data using the key
+    except:
+        offset = 0
     search = BUTTONS.get(key)
     if not search:
-        await query.answer("Please send the request again.", show_alert=True)
+        await query.answer("നിങ്ങൾ എന്റെ പഴയ സന്ദേശങ്ങളിലൊന്നാണ് ഉപയോഗിക്കുന്നത്, ദയവായി വീണ്ടും സെർച്ച് ചെയ്യുക.\n\n🤦‍♂You are using one of my old messages, please send the request again", show_alert=True)
         return
 
-    # Get files, new offset, and total count
     files, n_offset, total = await get_search_results(search, offset=offset, filter=True)
-
     try:
         n_offset = int(n_offset)
-    except ValueError:
+    except:
         n_offset = 0
 
     if not files:
-        return  # No files to display
-
+        return
     settings = await get_settings(query.message.chat.id)
-    invite_link = get_invite_link()
-    
-    # Create buttons based on user settings
     if settings['button']:
         btn = [
-            [InlineKeyboardButton(
-                text=f"[{get_size(file.file_size)}] {file.file_name}", 
-                url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
-            )] for file in files
+            [
+                InlineKeyboardButton(
+                    text=f"[{get_size(file.file_size)}] {file.file_name}", url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
+                ),
+            ]
+            for file in files
         ]
     else:
         btn = [
             [
-                InlineKeyboardButton(text=file.file_name, url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"),
-                InlineKeyboardButton(text=get_size(file.file_size), url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}")
-            ] for file in files
+                InlineKeyboardButton(
+                    text=f"{file.file_name}", url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
+                ),
+                InlineKeyboardButton(
+                    text=f"{get_size(file.file_size)}",
+                    url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
+                ),
+            ]
+            for file in files
         ]
 
-    # Pagination Logic
-    if offset > 10:
-        off_set = offset - 10
-    else:
+    if 0 < offset <= 10:
+        off_set = 0
+    elif offset == 0:
         off_set = None
-
-    # Adding buttons for pagination and invite link
+    else:
+        off_set = offset - 10
     if n_offset == 0:
         btn.append(
             [InlineKeyboardButton("⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"),
-             InlineKeyboardButton(f"📃 Pages {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages")]
+             InlineKeyboardButton(f"📃 Pages {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}",
+                                  callback_data="pages")]
         )
     elif off_set is None:
-        btn.insert(0, [
-            InlineKeyboardButton("💢 Join Our Main Channel 💢", url=invite_link),  # Ensure INVITE_LINK is correctly imported
-        ])
-async def next_page(bot, query):
-    ident, req, key, offset = query.data.split("_")
-    
-    # Ensure the user is querying their own request
-    if int(req) not in [query.from_user.id, 0]:
-        return await query.answer("⚠ Please make your own request, don't click on others' requested files.", show_alert=True)
-    
-    # Try to convert the offset to an integer
-    try:
-        offset = int(offset)
-    except ValueError:
-        offset = 0  # Default to 0 if conversion fails
-
-    # Retrieve the search data using the key
-    search = BUTTONS.get(key)
-    if not search:
-        await query.answer("Please send the request again.", show_alert=True)
-        return
-
-    # Get files, new offset, and total count
-    files, n_offset, total = await get_search_results(search, offset=offset, filter=True)
-
-    try:
-        n_offset = int(n_offset)
-    except ValueError:
-        n_offset = 0
-
-    if not files:
-        return  # No files to display
-
-    settings = await get_settings(query.message.chat.id)
-    
-    # Ensure the invite_link is fetched before use
-    invite_link = get_invite_link()  # Fetch invite link
-    if invite_link is None:
-        invite_link = "https://t.me/default_invite_link"  # Fallback if no link is available
-
-    # Create buttons based on user settings
-    if settings['button']:
-        btn = [
-            [InlineKeyboardButton(
-                text=f"[{get_size(file.file_size)}] {file.file_name}", 
-                url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"
-            )] for file in files
-        ]
-    else:
-        btn = [
+        btn.insert(0,
             [
-                InlineKeyboardButton(text=file.file_name, url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}"),
-                InlineKeyboardButton(text=get_size(file.file_size), url=f"https://t.me/{temp.U_NAME}?start=files_{file.file_id}")
-            ] for file in files
-        ]
-
-    # Pagination Logic
-    if offset > 10:
-        off_set = offset - 10
-    else:
-        off_set = None
-
-    # Adding buttons for pagination and invite link
-    if n_offset == 0:
-        btn.append(
-            [InlineKeyboardButton("⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"),
-             InlineKeyboardButton(f"📃 Pages {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages")]
+                InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢",url="https://t.me/+fQf4LXhEETsyMzRl"),
+            ]
         )
-    elif off_set is None:
-        btn.insert(0, [
-            InlineKeyboardButton("💢 Join Our Main Channel 💢", url=url),  # Use the invite link here
-        ])
         btn.append(
             [InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
-             InlineKeyboardButton("NEXT ⏩", callback_data=f"next_{req}_{key}_{n_offset}")]
-        )
+             InlineKeyboardButton("NEXT ⏩", callback_data=f"next_{req}_{key}_{n_offset}")])
     else:
         btn.append(
             [
                 InlineKeyboardButton("⏪ BACK", callback_data=f"next_{req}_{key}_{off_set}"),
                 InlineKeyboardButton(f"🗓 {math.ceil(int(offset) / 10) + 1} / {math.ceil(total / 10)}", callback_data="pages"),
                 InlineKeyboardButton("NEXT ⏩", callback_data=f"next_{req}_{key}_{n_offset}")
-            ]
+            ],
         )
-
-    # Edit the message to update buttons
     try:
         await query.edit_message_reply_markup(
             reply_markup=InlineKeyboardMarkup(btn)
         )
     except MessageNotModified:
-        pass  # Ignore if the message has not changed
-
+        pass
     await query.answer()
 
 
@@ -718,11 +642,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
 
 async def auto_filter(client, msg, spoll=False):
     if not spoll:
-        message = msg  # msg is already a Message object
-        settings = await get_settings(message.chat.id)  # Corrected here
-        invite_link = get_invite_link()  # Fetch invite link
-    if invite_link is None:
-        invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
+        message = msg
+        settings = await get_settings(message.chat.id)
         if message.text.startswith("/"): return  # ignore commands
         if re.findall("((^\/|^,|^!|^\.|^[\U0001F600-\U000E007F]).*)", message.text):
             return
@@ -738,9 +659,6 @@ async def auto_filter(client, msg, spoll=False):
             return
     else:
         settings = await get_settings(msg.message.chat.id)
-        invite_link = get_invite_link()  # Fetch invite link
-    if invite_link is None:
-        invite_link = "https://t.me/+WdzjOMj3tVY0YjJk"  # Fallback if no link is available
         message = msg.message.reply_to_message  # msg will be callback query
         search, files, offset, total_results = spoll
     pre = 'filep' if settings['file_secure'] else 'file'
@@ -767,10 +685,10 @@ async def auto_filter(client, msg, spoll=False):
             ]
             for file in files
         ]
-        
+
     btn.insert(0,
         [
-            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url=invite_link),
+            InlineKeyboardButton("💢 𝗝𝗼𝗶𝗻 𝗢𝘂𝗿 𝗠𝗮𝗶𝗻 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 💢", url="https://t.me/+fQf4LXhEETsyMzRl"),
         ]
     )
 
@@ -821,7 +739,7 @@ async def auto_filter(client, msg, spoll=False):
             **locals()
         )
     else:
-        cap = f"<b>ആദ്യം ഈ ബോട്ടിൽ പോയിട്ട് ജോയിൻ ആവുക. അതിനു ശേഷം ഇവിടെ മൂവി ക്ലിക്ക് ചെയ്യുക.\nബോട്ട് 👉@MT_FilmBot👈.\nHere is what i found for your query👇👇👇👇\n #{search}</b>"
+        cap = f"<b>ആദ്യം ഈ ബോട്ടിൽ പോയിട്ട് ജോയിൻ ആവുക. അതിനു ശേഷം ഇവിടെ മൂവി ക്ലിക്ക് ചെയ്യുക.\nബോട്ട് 👉@TGFilmRobot👈.\nHere is what i found for your query👇👇👇👇\n #{search}</b>"
     if imdb and imdb.get('poster'):
         try:
             __msg = await message.reply_photo(photo=imdb.get('poster'), caption=cap[:1024],
